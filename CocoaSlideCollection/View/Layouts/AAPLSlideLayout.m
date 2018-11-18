@@ -1,13 +1,13 @@
 /*
     Copyright (C) 2015 Apple Inc. All Rights Reserved.
     See LICENSE.txt for this sample’s licensing information
-    
+
     Abstract:
     This is the "SlideLayout" class implementation.
 */
 
 #import "AAPLSlideLayout.h"
-#import "AAPLSlideCarrierView.h"    // for SLIDE_WIDTH, SLIDE_HEGIHT
+#import "AAPLSlideCarrierView.h"    // for SLIDE_WIDTH, SLIDE_HEIGHT
 
 @implementation AAPLSlideLayout
 
@@ -30,7 +30,7 @@
 
 - (void)prepareLayout {
     [super prepareLayout];
-    
+
     // Inset by (X_PADDING,Y_PADDING) to precompute the box we need to fix the slides in.
     CGSize collectionViewContentSize = [self collectionViewContentSize];
     box = NSInsetRect(NSMakeRect(0, 0, collectionViewContentSize.width, collectionViewContentSize.height), X_PADDING, Y_PADDING);

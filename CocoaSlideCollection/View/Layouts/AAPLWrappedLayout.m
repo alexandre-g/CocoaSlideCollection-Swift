@@ -1,14 +1,14 @@
 /*
     Copyright (C) 2015 Apple Inc. All Rights Reserved.
     See LICENSE.txt for this sample’s licensing information
-    
+
     Abstract:
     This is the "WrappedLayout" class implementation.
 */
 
 #import "AAPLWrappedLayout.h"
 #import "AAPLSlideLayout.h"         // for X_PADDING, Y_PADDING
-#import "AAPLSlideCarrierView.h"    // for SLIDE_WIDTH, SLIDE_HEGIHT
+#import "AAPLSlideCarrierView.h"    // for SLIDE_WIDTH, SLIDE_HEIGHT
 
 @implementation AAPLWrappedLayout
 

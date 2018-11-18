@@ -19,14 +19,14 @@ import Cocoa
 @objc(AAPLSlideBorderView)
 class AAPLSlideBorderView: NSView {
     private var _borderColor: NSColor?
-    
+
     //MARK: Property Accessors
-    
+
     var borderColor: NSColor? {
         get {
             return _borderColor
         }
-        
+
         set(newBorderColor) {
             if _borderColor != newBorderColor {
                 _borderColor = newBorderColor?.copy() as! NSColor?
@@ -34,14 +34,14 @@ class AAPLSlideBorderView: NSView {
             }
         }
     }
-    
+
     //MARK: Visual State
-    
+
     // A AAPLSlideCarrierView wants to receive -updateLayer so it can set its backing layer's contents property, instead of being sent -drawRect: to draw its content procedurally.
     override var wantsUpdateLayer: Bool {
         return true
     }
-    
+
     override func updateLayer() {
         if let layer = self.layer {
             layer.borderColor = borderColor?.cgColor
@@ -49,5 +49,5 @@ class AAPLSlideBorderView: NSView {
             layer.cornerRadius = SLIDE_CORNER_RADIUS
         }
     }
-    
+
 }

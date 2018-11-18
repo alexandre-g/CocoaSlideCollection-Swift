@@ -19,7 +19,7 @@ import Cocoa
 @objc(AAPLScatterLayout)
 class AAPLScatterLayout: AAPLSlideLayout {
     private var cachedItemFrames: [IndexPath: NSRect] = [:]
-    
+
     override func layoutAttributesForItem(at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
         var frameValue = cachedItemFrames[indexPath]
         if frameValue == nil {
@@ -29,11 +29,11 @@ class AAPLScatterLayout: AAPLSlideLayout {
             frameValue = NSMakeRect(p.x, p.y, itemSize.width, itemSize.height)
             cachedItemFrames[indexPath] = frameValue!
         }
-        
+
         let attributes = (type(of: self).layoutAttributesClass() as! NSCollectionViewLayoutAttributes.Type).init(forItemWith: indexPath)
         attributes.frame = frameValue!
         attributes.zIndex = indexPath.item
         return attributes
     }
-    
+
 }

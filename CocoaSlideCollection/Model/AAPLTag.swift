@@ -19,22 +19,22 @@ import Cocoa
 @objc(AAPLTag)
 class AAPLTag: NSObject {
     private(set) var name: String                 // the tag string (e.g. "Vacation")
-    @objc dynamic private(set) var imageFiles: [AAPLImageFile] = []     // the ImageFiles that have this tag, ordered for display using our desired sort
-    
+    dynamic private(set) var imageFiles: [AAPLImageFile] = []     // the ImageFiles that have this tag, ordered for display using our desired sort
+
     init(name newName: String) {
         name = newName
         super.init()
     }
-    
+
     func insertImageFile(_ imageFile: AAPLImageFile) {
-        let insertionIndex = imageFiles.indexOf(imageFile, inSortedRange: imageFiles.startIndex..<imageFiles.endIndex) {imageFile1, imageFile2 in
+        let insertionIndex = imageFiles.indexOf(imageFile, inSortedRange: imageFiles.startIndex..<imageFiles.endIndex) { imageFile1, imageFile2 in
             return imageFile1.filenameWithoutExtension!.caseInsensitiveCompare(imageFile2.filenameWithoutExtension!)
         }
         imageFiles.insert(imageFile, at: insertionIndex)
     }
-    
+
     override var description: String {
         return "{Tag: \(self.name)}"
     }
-    
+
 }

@@ -20,27 +20,27 @@ import Cocoa
 class AAPLSlideTableBackgroundView: NSView {
     private var gradient: NSGradient
     private var _image: NSImage?
-    
+
     override init(frame frameRect: NSRect) {
         let centerColor = NSColor(calibratedRed: 0.94, green: 0.99, blue: 0.98, alpha: 1.0)
         let outerColor = NSColor(calibratedRed: 0.91, green: 1.0, blue: 0.98, alpha: 1.0)
         gradient = NSGradient(starting: centerColor, ending: outerColor)!
         super.init(frame: frameRect)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override var isOpaque: Bool {
         return true
     }
-    
+
     var image: NSImage? {
         get {
             return _image
         }
-        
+
         set(newImage) {
             if _image !== newImage {
                 _image = newImage
@@ -48,7 +48,7 @@ class AAPLSlideTableBackgroundView: NSView {
             }
         }
     }
-    
+
     override func draw(_ dirtyRect: NSRect) {
         if let image = image {
             // Draw an image, scaled proportionally to fill the view's entire bounds.
@@ -56,7 +56,7 @@ class AAPLSlideTableBackgroundView: NSView {
             let bounds = self.bounds
             let scaleToFillWidth = bounds.size.width / imageSize.width
             let scaleToFillHeight = bounds.size.height / imageSize.height
-            
+
             // Choose the greater of the scale factor required to fill the view's width, and the scale factor required to fill the view's height, and compute the destination rect accordingly.
             var destRect: NSRect
             if scaleToFillWidth > scaleToFillHeight {
@@ -70,5 +70,5 @@ class AAPLSlideTableBackgroundView: NSView {
             gradient.draw(in: self.bounds, relativeCenterPosition: NSZeroPoint)
         }
     }
-    
+
 }

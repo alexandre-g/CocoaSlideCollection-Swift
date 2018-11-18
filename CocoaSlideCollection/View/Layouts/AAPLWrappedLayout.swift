@@ -18,7 +18,7 @@ import Cocoa
 // Flows items in rows.
 @objc(AAPLWrappedLayout)
 class AAPLWrappedLayout: NSCollectionViewFlowLayout {
-    
+
     override init() {
         super.init()
         self.itemSize = NSMakeSize(SLIDE_WIDTH, SLIDE_HEIGHT)
@@ -26,17 +26,17 @@ class AAPLWrappedLayout: NSCollectionViewFlowLayout {
         self.minimumLineSpacing = Y_PADDING
         self.sectionInset = NSEdgeInsetsMake(Y_PADDING, X_PADDING, Y_PADDING, X_PADDING)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutAttributesForItem(at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
         let attributes = super.layoutAttributesForItem(at: indexPath)
         attributes?.zIndex = indexPath.item
         return attributes
     }
-    
+
     override func layoutAttributesForElements(in rect: NSRect) -> [NSCollectionViewLayoutAttributes] {
         let layoutAttributesArray = super.layoutAttributesForElements(in: rect)
         for attributes in layoutAttributesArray {
@@ -44,5 +44,5 @@ class AAPLWrappedLayout: NSCollectionViewFlowLayout {
         }
         return layoutAttributesArray
     }
-    
+
 }

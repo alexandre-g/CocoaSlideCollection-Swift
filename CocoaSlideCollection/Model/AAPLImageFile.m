@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2015 Apple Inc. All Rights Reserved.
     See LICENSE.txt for this sample’s licensing information
-    
+
     Abstract:
     This is the "ImageFile" class implementation.
 */
@@ -65,7 +65,7 @@
 
 + (NSArray *)demoTagNamesForImageFileURL:(NSURL *)url {
     NSString *filenameWithoutExtension = [[url lastPathComponent] stringByDeletingPathExtension];
-    return [[self demoTagNamesDictionary] objectForKey:filenameWithoutExtension];
+    return [self.demoTagNamesDictionary objectForKey:filenameWithoutExtension];
 }
 
 - (id)initWithURL:(NSURL *)newURL {
@@ -146,14 +146,14 @@
 /* Many kinds of image files contain prerendered thumbnail images that can be quickly loaded without having to decode the entire contents of the image file and reconstruct the full-size image.  The ImageIO framework's CGImageSource API provides a means to do this, using the CGImageSourceCreateThumbnailAtIndex() function.  For more information on CGImageSource objects and their capabilities, see the CGImageSource reference on the Apple Developer Connection website, at http://developer.apple.com/documentation/GraphicsImaging/Reference/CGImageSource/Reference/reference.html
 */
 - (BOOL)createImageSource {
-    
+
     if (imageSource == NULL) {
         // Compose absolute URL to file.
         NSURL *sourceURL = [[self url] absoluteURL];
         if (sourceURL == nil) {
             return NO;
         }
-        
+
         // Create a CGImageSource from the URL.
         imageSource = CGImageSourceCreateWithURL((CFURLRef)sourceURL, NULL);
         if (imageSource == NULL) {
@@ -170,12 +170,12 @@
 
 - (BOOL)loadMetadata {
     if (imageProperties == NULL) {
-        
+
         // Get image properties.
         if (![self createImageSource]) {
             return NO;
         }
-        
+
         // This code looks at the first image only.
         // To be truly general, we'd need to handle the possibility of an image source
         // having more than one image to offer us.
@@ -183,7 +183,7 @@
         NSInteger index = 0;
         imageProperties = (NSDictionary *)CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(imageSource, index, NULL));
     }
-    
+
     // Return indicating success!
     return imageProperties ? YES : NO;
 }

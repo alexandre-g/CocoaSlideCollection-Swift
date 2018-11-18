@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2015 Apple Inc. All Rights Reserved.
     See LICENSE.txt for this sample’s licensing information
-    
+
     Abstract:
     This is the "SlideCarrierView" class implementation.
 */
@@ -106,7 +106,7 @@
         borderColor = [NSColor colorWithCalibratedRed:0.0 green:0.5 blue:1.0 alpha:1.0]; // Aqua
 
     } else {
-        // Item is either not selected, or is selected but not highlighted for deselection: Sbhow no border around it.
+        // Item is either not selected, or is selected but not highlighted for deselection: Show no border around it.
         borderColor = nil;
     }
 
@@ -128,7 +128,7 @@
 - (void)updateLayer {
     // Provide the SlideCarrierView's backing layer's contents directly, instead of via -drawRect:.
     self.layer.contents = [NSImage imageNamed:@"SlideCarrier"];
-    
+
     // Use this as an opportunity to update our AAPLSlideBorderView.
     [self updateBorderView];
 }

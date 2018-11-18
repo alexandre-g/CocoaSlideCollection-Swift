@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2015 Apple Inc. All Rights Reserved.
     See LICENSE.txt for this sample’s licensing information
-    
+
     Abstract:
     This is the browser window controller implementation.
 */
@@ -71,10 +71,10 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
 
 // This important method, which is invoked after the AAPLBrowserWindowController has finished loading its BrowserWindow.nib file, is where we perform some important setup of our NSCollectionView.
 - (void)windowDidLoad {
-    
+
     // Set the window's title to the name of the folder we're browsing.
     self.window.title = rootURL.lastPathComponent;
-    
+
     // Set imageCollectionView.collectionViewLayout to match our desired layoutKind.
     [self updateLayout];
 
@@ -98,7 +98,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
 
     // Enable dragging items from our CollectionView to other applications.
     [imageCollectionView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:NO];
-    
+
     // Enable dragging items within and into our CollectionView.
     [imageCollectionView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
 }
@@ -151,7 +151,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
 }
 
 - (void)updateLayout {
-    
+
     NSCollectionViewLayout *layout = nil;
     switch (layoutKind) {
         case SlideLayoutKindCircular: layout = [[AAPLCircularLayout alloc] init]; break;
@@ -179,7 +179,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (object == imageCollectionView && [keyPath isEqual:selectionIndexPathsKey]) {
-        
+
         /*
             We're being notified that our imageCollectionView's
             "selectionIndexPaths" property has changed.  Update our status
@@ -206,7 +206,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
 
         NSKeyValueChange kind = [change[NSKeyValueChangeKindKey] integerValue];
         if (kind == NSKeyValueChangeInsertion || kind == NSKeyValueChangeRemoval) {
-            
+
             NSIndexSet *indexes = change[@"indexes"];
             NSMutableSet<NSIndexPath *> *indexPaths = [NSMutableSet<NSIndexPath *> setWithCollectionViewIndexPaths:[NSArray array]];
             if ([keyPath isEqual:imageFilesKey]) {
@@ -216,7 +216,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
                     [indexes enumerateIndexesUsingBlock:^(NSUInteger itemIndex, BOOL *stop) {
                         [indexPaths addObject:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
                     }];
-                    
+
                 } else if ([object isKindOfClass:[AAPLTag class]]) {
 
                     // An AAPLTag's "imageFiles" array changed.
@@ -226,7 +226,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
                             [indexPaths addObject:[NSIndexPath indexPathForItem:itemIndex inSection:sectionIndex]];
                         }];
                     }
-                
+
                 }
 
                 // Notify our imageCollectionView of the change.
@@ -235,7 +235,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
                 } else {
                     [self handleImageFilesRemovedAtIndexPaths:indexPaths];
                 }
-                
+
             } else if ([keyPath isEqual:tagsKey]) {
 
                 // Our imageCollection's "tags" array changed.
@@ -336,7 +336,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
             content = [NSString stringWithFormat:@"%lu image files have no tags assigned", (unsigned long)(imageCollection.untaggedImageFiles.count)];
         }
     }
-    
+
     if ([kind isEqual:NSCollectionElementKindSectionHeader]) {
         identifier = @"Header";
     } else if ([kind isEqual:NSCollectionElementKindSectionFooter]) {
@@ -407,7 +407,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
     useful if the same CollectionView ends up being the drop destination.
 */
 - (void)collectionView:(NSCollectionView *)collectionView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forItemsAtIndexPaths:(NSSet<NSIndexPath *> *)indexPaths {
-    
+
     /*
         Remember the indexPaths we're dragging, in case we end up being the drag
         destination too.  Knowing that a drop originated from this
@@ -428,7 +428,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
 
 /*
  6. Whether the drag is accepted, or the drag operation is cancelled, the
-    CollectionView always sends this mesage to conclude the drag session.  It's
+    CollectionView always sends this message to conclude the drag session.  It's
     a good place to perform any necessary cleanup, such as clearing the
     "indexPathsOfItemsBeingDragged" we saved in the
     -collectionView:draggingSession:willBeginAtPoint:forItemsAtIndexPaths:
@@ -455,19 +455,19 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
     propose dropping the dragging items at various places within within itself.
     (If the user mouses out of the CollectionView, the CollectionView stops
     sending this message.  If the user mouses back into the CollectionView, the
-    CollectionView starts sending this messsage again.)  You return an
+    CollectionView starts sending this message again.)  You return an
     NSDragOperation mask to specify what kinds of drag operations should be
     allowed for the proposed destination.  You may also alter the
     proposedDropOperation and proposedDropIndexPath through the provided
     pointers, if desired.
 */
 - (NSDragOperation)collectionView:(NSCollectionView *)collectionView validateDrop:(id <NSDraggingInfo>)draggingInfo proposedIndexPath:(NSIndexPath **)proposedDropIndexPath dropOperation:(NSCollectionViewDropOperation *)proposedDropOperation {
-    
+
     /*
         Interpret the proposedDropIndexPath in the context of the
         proposedDropOperation, and decide whether it's an operation we want to
         allow.  A proposedDropOperation of NSCollectionViewDropOn indicates that
-        the user is hovering over an existing item idntified by the
+        the user is hovering over an existing item identified by the
         proposedDropIndexPath.  A proposedDropOperation of
         NSCollectionViewDropBefore indicates that the user is hovering in a gap
         between items, and inserting the dropped items at proposedDropIndexPath
@@ -497,7 +497,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
         If we're dragging items around within the CollectionView (i.e. this
         CollectionView is also the dragging source), the operation is Move.
         If not, the operation is Copy.
-     
+
         This example doesn't yet support dragging items within a CollectionView
         in "Group by Tag" mode, so return NSDragOperationNone if that's what's
         proposed.
@@ -529,12 +529,12 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
         "move" instead of a "delete" and "insert".
     */
     [self suspendAutoUpdateResponse];
-    
+
     // Is our own imageCollectionView the dragging source?
     if (indexPathsOfItemsBeingDragged) {
 
         // Yes, existing items are being dragged within our imageCollectionView.
-        
+
         if (groupByTag) {
 
             /*
@@ -545,7 +545,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
             result = NO;
 
         } else {
-            
+
             /*
                 Walk forward through fromItemIndex values > toItemIndex, to keep
                 our "from" and "to" indexes valid as we go, moving items one at
@@ -555,7 +555,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
             [indexPathsOfItemsBeingDragged enumerateIndexPathsWithOptions:0 usingBlock:^(NSIndexPath *fromIndexPath, BOOL *stop) {
                 NSInteger fromItemIndex = fromIndexPath.item;
                 if (fromItemIndex > toItemIndex) {
-                    
+
                     /*
                         For each step: First, modify our model.
                     */
@@ -566,12 +566,12 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
                         made to our model.
                     */
                     [[imageCollectionView animator] moveItemAtIndexPath:[NSIndexPath indexPathForItem:fromItemIndex inSection:[indexPath section]] toIndexPath:[NSIndexPath indexPathForItem:toItemIndex inSection:[indexPath section]]];
-                    
+
                     // Advance to maintain moved items in their original order.
                     ++toItemIndex;
                 }
             }];
-            
+
             /*
                 Walk backward through fromItemIndex values < toItemIndex, to
                 keep our "from" and "to" indexes valid as we go, moving items
@@ -598,15 +598,15 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
                     --adjustedToItemIndex;
                 }
             }];
-     
+
             // We did it!
             result = YES;
         }
-        
+
     } else {
-        
+
         // Items are being dragged from elsewhere into our CollectionView.
-        
+
         /*
             Examine the items to be dropped, as provided by the draggingInfo
             object.  Accumulate the URLs among them into a "droppedObjects"
@@ -614,13 +614,13 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
         */
         NSMutableArray *droppedObjects = [NSMutableArray array];
         [draggingInfo enumerateDraggingItemsWithOptions:0 forView:collectionView classes:@[[NSURL class]] searchOptions:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSPasteboardURLReadingFileURLsOnlyKey, nil] usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop) {
-            
+
             NSURL *url = draggingItem.item;
             if ([url isKindOfClass:[NSURL class]]) {
                 [droppedObjects addObject:url];
             }
         }];
-        
+
         /*
             For each dropped URL:
 
@@ -629,7 +629,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
                imageCollection.
             3. Notify our CollectionView of the insertion.
 
-            We check first whether the colleciton already contains an ImageFile
+            We check first whether the collection already contains an ImageFile
             with the given URL, and disallow duplicates.
         */
         NSInteger insertionIndex = indexPath.item;
@@ -637,7 +637,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
         for (NSURL *url in droppedObjects) {
             AAPLImageFile *imageFile = [imageCollection imageFileForURL:url];
             if (imageFile == nil) {
-                
+
                 /*
                     Copy the image file from the source URL into our
                     imageCollection's folder.
@@ -656,13 +656,13 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
                          For each item: First, modify our model.
                          */
                         [imageCollection insertImageFile:imageFile atIndex:insertionIndex];
-                        
+
                         /*
                          Next, notify the CollectionView of the change we just
                          made to our model.
                          */
                         [collectionView.animator insertItemsAtIndexPaths:[NSSet<NSIndexPath *> setWithCollectionViewIndexPath:indexPath]];
-                        
+
                         // We succeeded in accepting at least one item.
                         result = YES;
                     }
@@ -678,7 +678,7 @@ static NSString *StringFromCollectionViewIndexPath(NSIndexPath *indexPath);
                 }
             }
         }
-        
+
         if (errors.count > 0) {
             [imageCollectionView presentError:errors[0] modalForWindow:imageCollectionView.window delegate:nil didPresentSelector:NULL contextInfo:NULL];
         }
@@ -769,10 +769,10 @@ static NSString *StringFromCollectionViewDropOperation(NSCollectionViewDropOpera
     switch (dropOperation) {
         case NSCollectionViewDropBefore:
             return @"before";
-            
+
         case NSCollectionViewDropOn:
             return @"on";
-            
+
         default:
             return @"?";
     }

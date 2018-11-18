@@ -39,7 +39,7 @@ import Foundation
 
 extension Array {
     //### simulate "indexOfObject:inSortedRange:options:usingComparator:" with opts = NSBinarySearchingInsertionIndex
-    func indexOf(_ element: Element, inSortedRange r: Range<Int>, usingComparison comparison: (Element, Element)->ComparisonResult) -> Int {
+    func indexOf(_ element: Element, inSortedRange r: Range<Int>, usingComparison comparison: (Element, Element) -> ComparisonResult) -> Int {
         if r.isEmpty {
             return r.lowerBound
         }
@@ -47,7 +47,7 @@ extension Array {
         var e = r.upperBound - 1
         var cr: ComparisonResult = .orderedSame
         while s <= e {
-            let m = (s + e)/2
+            let m = (s + e) / 2
             cr = comparison(element, self[m])
             if cr == .orderedSame {
                 return m

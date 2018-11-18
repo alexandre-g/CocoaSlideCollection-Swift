@@ -19,20 +19,20 @@ import CoreServices
 @objc(AAPLFileTreeWatcherThread)
 class AAPLFileTreeWatcherThread: Thread {
     private var paths: [String]                 // array of paths we're watching (as NSStrings)
-    private var handler: (()->Void)!          // the block to invoke when we sense a change
+    private var handler: (() -> Void)!          // the block to invoke when we sense a change
     private var fsEventStream: FSEventStreamRef? = nil // the FSEventStream that's informing us of changes
-    
-    
+
+
     /*
     Creates a new AAPLFileTreeWatcherThread that monitors the file subtree
     specified by the given path, and invokes the given "changeHandler" block
     each time a change in the file subtree is detected.
-    
+
     Send -start to the returned instance to start watching the file system.
     Send -cancel to stop.
     (AAPLFileTreeWatcherThread inherits these API methods from NSThread.)
     */
-    init(path pathToWatch: String, changeHandler: @escaping ()->Void) {
+    init(path pathToWatch: String, changeHandler: @escaping () -> Void) {
         paths = [pathToWatch]
         super.init()
         self.name = "AAPLFileTreeWatcherThread"
@@ -40,7 +40,7 @@ class AAPLFileTreeWatcherThread: Thread {
             handler = changeHandler
         }
     }
-    
+
     /*
     Invoked by AAPLFileTreeWatcherThread to schedule main-thread invocation of
     its changeHandler.
@@ -52,7 +52,7 @@ class AAPLFileTreeWatcherThread: Thread {
             }
         }
     }
-    
+
     /*
     Invoke this to zero out the thread's "changeHandler" pointer when things it
     operates on are about to go away.  (Sending -cancel to the thread isn't
@@ -64,10 +64,10 @@ class AAPLFileTreeWatcherThread: Thread {
             handler = nil
         }
     }
-    
+
     override func main() {
         autoreleasepool {
-            
+
             // Create our fsEventStream.
             var context: FSEventStreamContext = FSEventStreamContext()
             context.version = 0
@@ -77,26 +77,26 @@ class AAPLFileTreeWatcherThread: Thread {
             context.copyDescription = nil
             fsEventStream = FSEventStreamCreate(kCFAllocatorDefault, AAPLFileTreeWatcherEventStreamCallback, &context, paths as CFArray, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 1.0, FSEventStreamCreateFlags(kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagWatchRoot | kFSEventStreamCreateFlagIgnoreSelf))
             if fsEventStream != nil {
-                
+
                 // Schedule the fsEventStream on our thread's run loop.
                 let runLoop = RunLoop.current
                 let cfRunLoop = runLoop.getCFRunLoop()
                 FSEventStreamScheduleWithRunLoop(fsEventStream!, cfRunLoop, CFRunLoopMode.commonModes.rawValue)
-                
+
                 // Open the faucet.
                 FSEventStreamStart(fsEventStream!)
-                
+
                 // Run until we're asked to stop.
                 while !self.isCancelled {
                     runLoop.run(until: Date(timeIntervalSinceNow: 0.25))
                 }
-                
+
                 // Shut off the faucet.
                 FSEventStreamStop(fsEventStream!)
-                
+
                 // Unschedule the fsEventStream on our thread's run loop.
                 FSEventStreamUnscheduleFromRunLoop(fsEventStream!, cfRunLoop, CFRunLoopMode.commonModes.rawValue)
-                
+
                 // Invalidate and release fsEventStream.
                 FSEventStreamInvalidate(fsEventStream!)
                 FSEventStreamRelease(fsEventStream!)
@@ -104,14 +104,13 @@ class AAPLFileTreeWatcherThread: Thread {
             }
         }
     }
-    
+
 }
 
-private func AAPLFileTreeWatcherEventStreamCallback(_ streamRef: ConstFSEventStreamRef, clientCallBackInfo: UnsafeMutableRawPointer?, numEvents: Int, eventPaths: UnsafeMutableRawPointer, eventFlags: UnsafePointer<FSEventStreamEventFlags>, eventIds: UnsafePointer<FSEventStreamEventId>)
-{
+private func AAPLFileTreeWatcherEventStreamCallback(_ streamRef: ConstFSEventStreamRef, clientCallBackInfo: UnsafeMutableRawPointer?, numEvents: Int, eventPaths: UnsafeMutableRawPointer, eventFlags: UnsafePointer<FSEventStreamEventFlags>, eventIds: UnsafePointer<FSEventStreamEventId>) {
     if numEvents > 0 {
         let thread = unsafeBitCast(clientCallBackInfo, to: AAPLFileTreeWatcherThread.self)
-        
+
         thread.invokeChangeHandler()
     }
 }

@@ -18,10 +18,10 @@ import Cocoa
 // A AAPLSlideImageView is a slightly customized NSImageView, that composites semitransparent bands over areas the slide's image doesn't cover, for a more slide-like appearance.
 @objc(AAPLSlideImageView)
 class AAPLSlideImageView: NSImageView {
-    
+
     // Fill in semitransparent gray bands in any areas that the image doesn't cover, to give a more slide-like appearance.
     override func draw(_ rect: NSRect) {
-        if let image = self.image , self.imageScaling == .scaleProportionallyDown {
+        if let image = self.image, self.imageScaling == .scaleProportionallyDown {
             let imageSize = image.size
             let viewSize = self.bounds.size
             if imageSize.height > 0.0 && viewSize.height > 0.0 {
@@ -43,9 +43,9 @@ class AAPLSlideImageView: NSImageView {
                 }
             }
         }
-        
+
         // Now let NSImageView do its drawing.
         super.draw(rect)
     }
-    
+
 }
