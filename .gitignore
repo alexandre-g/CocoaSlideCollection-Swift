@@ -1,2 +1,47 @@
-.DS_Store
+### OSX ###
+*.DS_Store
+.AppleDouble
+.LSOverride
 
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+.idea
+xcuserdata/
+
+# Files
+*.ipa
+IPAs/
+fastlane/report.*
+fastlane/test_output
+
+# Folders
+fastlane/screenshots*/**/*.png
+fastlane/screenshots*/**/*.jpg
+fastlane/screenshots*/*.jpg
+fastlane/screenshots*/*.png
+fastlane/screenshots/*.html
+#Desygner.xcodeproj/xcshareddata/
+
+*.mobileprovision
+R.generated.swift
+
+# Certificates
+*.cer
+*.certSigningRequest
+*.p12
