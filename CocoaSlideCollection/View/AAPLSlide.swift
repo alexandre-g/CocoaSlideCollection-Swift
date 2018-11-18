@@ -104,7 +104,7 @@ class AAPLSlide: NSCollectionViewItem {
     
     private var slideTableBackgroundView: AAPLSlideTableBackgroundView? {
         // Find our AAPLSlideTableBackgroundView via NSCollectionViewItem's "collectionView" property.
-        let backgroundView = self.collectionView.backgroundView
+        let backgroundView = self.collectionView!.backgroundView
         return backgroundView is AAPLSlideTableBackgroundView ? (backgroundView as! AAPLSlideTableBackgroundView) : nil
     }
     
