@@ -30,6 +30,7 @@ class AAPLImageFile: NSObject {
     var dateLastUpdated: Date?
     var tagNames: [String] = []
 
+    var bracketedSiblings: [String] = []
 
     //MARK: Image Properties
 
@@ -113,7 +114,12 @@ class AAPLImageFile: NSObject {
     }
 
     var dimensionsDescription: String {
-        return "\(self.pixelsWide) x \(self.pixelsHigh)"
+        //return "\(self.pixelsWide) x \(self.pixelsHigh) (\(exposureBias))"
+        var desc = "\(self.pixelsWide) x \(self.pixelsHigh)"
+        if !bracketedSiblings.isEmpty {
+            desc += " [\(bracketedSiblings.count + 1)]"
+        }
+        return desc
     }
 
 
@@ -133,6 +139,13 @@ class AAPLImageFile: NSObject {
         return imageProperties![kCGImagePropertyPixelHeight as AnyHashable] as! Int
     }
 
+    var exposureBias: Int {
+        if imageProperties == nil {
+            self.loadMetadata()
+        }
+        let exif = imageProperties![kCGImagePropertyExifDictionary] as! [AnyHashable: Any]
+        return exif[kCGImagePropertyExifExposureBiasValue as AnyHashable] as! Int
+    }
 
     //MARK: Loading
 

@@ -55,7 +55,7 @@ class AAPLAppDelegate: NSObject, NSApplicationDelegate {
     Prompts the user to choose a folder, using a standard Open panel, then opens
     a browser window for that folder using the method above.
     */
-    @IBAction func openBrowserWindow(_: AnyObject) {
+    @IBAction func openBrowserWindow(_: AnyObject?) {
 
         let openPanel = NSOpenPanel()
         openPanel.prompt = "Choose"
@@ -73,6 +73,70 @@ class AAPLAppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    // CocoaSlideCollection's "File" -> "Save Order..." (Cmd+S) menu item sends this.
+    /*
+    Action method invoked by the "File" -> "Save Order..." menu command.
+    Save the new order to disk by renaming files on disk appropriately
+    */
+    @IBAction func saveOrder(_: AnyObject) {
+        let imageFiles = browserWindowControllers.first!.imageCollection!.imageFiles
+        /*imageFiles.forEach { image in
+            if !image.bracketedSiblings.isEmpty {
+                print("\(image.filename): [0]")
+                image.bracketedSiblings.enumerated().forEach { i, photo in
+                    print("\(photo) [\(i+1)] ")
+                }
+            } else {
+                print("\(image.filename): no bracket")
+            }
+        }
+        return*/
+
+        var counter = 0
+
+        func getNextCounterValue() -> String {
+            counter += 1
+            var counterValue = "\(counter)"
+            while counterValue.count < 3 {
+                counterValue = "0" + counterValue
+            }
+            return counterValue
+        }
+
+        imageFiles.forEach { image in
+
+            if !image.bracketedSiblings.isEmpty {
+
+                let imageNumber = getNextCounterValue()
+                /// First image in bracket series (0 exposure bias)
+                let newPath = image.url.path.replacingOccurrences(of: image.filenameWithoutExtension!, with: "\(imageNumber)a")
+                renameFile(atPath: image.url.path, toPath: newPath)
+
+                /// Second and third images in bracket series (-3, +3 bias)
+                image.bracketedSiblings.enumerated().forEach { i, bracket in
+                    let bracketedImagePath = image.url.path.replacingOccurrences(of: image.filename, with: bracket)
+                    let newPath = bracketedImagePath.replacingOccurrences(of: bracket, with: imageNumber + (i == 0 ? "b" : "c") + "." + image.url.pathExtension)
+                    renameFile(atPath: bracketedImagePath, toPath: newPath)
+                }
+
+            } else {
+                let newPath = image.url.path.replacingOccurrences(of: image.filenameWithoutExtension!, with: "\(getNextCounterValue())")
+                renameFile(atPath: image.url.path, toPath: newPath)
+            }
+        }
+
+        let alert = NSAlert.init()
+        alert.messageText = "Переименовано"
+        alert.informativeText = "Всего: \(imageFiles.count) (если считать брекеты то больше)"
+        alert.addButton(withTitle: "Окей")
+        alert.runModal()
+    }
+
+    func renameFile(atPath: String, toPath: String) {
+        print("\(atPath) -> \(toPath)")
+        try! FileManager.default.moveItem(atPath: atPath, toPath: toPath)
+    }
+
     // When a browser window is closed, release its BrowserWindowController.
     func browserWindowWillClose(_ notification: Notification) {
         let browserWindow = notification.object as! NSWindow
@@ -84,7 +148,9 @@ class AAPLAppDelegate: NSObject, NSApplicationDelegate {
 
     // Browse a default folder on launch.
     func applicationDidFinishLaunching(_ notification: Notification) {
-        self.openBrowserWindowForFolderURL(URL(fileURLWithPath: "/Library/Desktop Pictures"))
+        openBrowserWindow(nil)
+        //self.openBrowserWindowForFolderURL(URL(fileURLWithPath: "/Library/Desktop Pictures"))
+        //self.openBrowserWindowForFolderURL(URL(fileURLWithPath: "/Users/alex/Desktop/Shared/Room"))
+        //self.openBrowserWindowForFolderURL(URL(fileURLWithPath: "/Volumes/SM951/2018.11.17 Aquarius"))
     }
-
 }

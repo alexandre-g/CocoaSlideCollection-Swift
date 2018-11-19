@@ -91,8 +91,16 @@ class AAPLImageCollection: NSObject {
             untaggedImageFiles.insert(imageFile, at: insertionIndex)
         }
 
-        // Insert the imageFile into our "imageFiles" array (in a KVO-compliant way).
-        self.mutableArrayValue(forKey: imageFilesKey).insert(imageFile, at: index)
+
+        if imageFile.exposureBias == -3 || imageFile.exposureBias == 3 {
+            let indexOffset = -1
+            let sortedList = imageFiles.sorted { img1, img2 in img1.filenameWithoutExtension! < img2.filenameWithoutExtension! }
+            let baseImage = sortedList[index + indexOffset] as! AAPLImageFile
+            baseImage.bracketedSiblings.append(imageFile.filename)
+        } else {
+            // Insert the imageFile into our "imageFiles" array (in a KVO-compliant way).
+            self.mutableArrayValue(forKey: imageFilesKey).insert(imageFile, at: index)
+        }
 
         // Add the imageFile into our "imageFilesByURL" dictionary.
         imageFilesByURL[imageFile.url] = imageFile
@@ -205,6 +213,20 @@ class AAPLImageCollection: NSObject {
                                 }
                             } catch _ {}
                             filesToProcess = filesToProcess.filter { $0 != imageFile }
+
+                            // Place +3 & -3 exposure bias images into the 0 exposure one
+                            filesToProcess.enumerated().forEach { i, image in
+                                if image.exposureBias == -3 {
+                                    filesToProcess[i - 1].bracketedSiblings.append(image.filename)
+
+                                } else if image.exposureBias == 3 {
+                                    filesToProcess[i - 2].bracketedSiblings.append(image.filename)
+                                }
+                            }
+
+                            // Filter out +3 & -3 exposure bias images
+                            filesToProcess = filesToProcess.filter { $0.exposureBias != -3 && $0.exposureBias != 3 }
+
                         } else {
                             // File was added.
                             urlsAdded.append(url)
@@ -229,7 +251,8 @@ class AAPLImageCollection: NSObject {
                     }
 
                     // Add ImageFiles for files we've newly discovered.
-                    for imageFileURL in urlsAdded {
+
+                    for imageFileURL in urlsAdded.sorted(by: { url1, url2 in url1.absoluteString < url2.absoluteString }) {
                         let imageFile = AAPLImageFile(URL: imageFileURL)
                         self.addImageFile(imageFile)
                     }

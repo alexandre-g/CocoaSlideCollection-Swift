@@ -95,6 +95,11 @@ class AAPLBrowserWindowController: NSWindowController, NSCollectionViewDataSourc
 
         // Configure our CollectionView for drag-and-drop.
         self.registerForCollectionViewDragAndDrop()
+
+        //FixMe: Used to update bracket number on cells
+        delay(1) {
+            self.imageCollectionView.reloadData()
+        }
     }
 
     private func registerForCollectionViewDragAndDrop() {
@@ -791,4 +796,14 @@ private func StringFromCollectionViewIndexPath(_ indexPath: IndexPath?) -> Strin
     } else {
         return "(nil)"
     }
+}
+
+public func delay(_ delay: Double, onBackground: Bool = false, closure: @escaping () -> ()) {
+    let queue: DispatchQueue
+    if onBackground {
+        queue = DispatchQueue.global(qos: DispatchQoS.QoSClass.default)
+    } else {
+        queue = DispatchQueue.main
+    }
+    queue.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }
