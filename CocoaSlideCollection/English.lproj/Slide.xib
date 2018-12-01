@@ -16,8 +16,8 @@
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="13">
                     <rect key="frame" x="15" y="10" width="110" height="14"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="center" title="Dimensions" id="100013">
-                        <font key="font" metaFont="smallSystem"/>
-                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <font key="font" metaFont="systemSemibold" size="11"/>
+                        <color key="textColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
@@ -28,7 +28,7 @@
                         </binding>
                     </connections>
                 </textField>
-                <imageView alphaValue="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="6" customClass="AAPLSlideImageView">
+                <imageView translatesAutoresizingMaskIntoConstraints="NO" id="6" customClass="AAPLSlideImageView">
                     <rect key="frame" x="0.0" y="25" width="140" height="90"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" id="100006"/>
                     <connections>

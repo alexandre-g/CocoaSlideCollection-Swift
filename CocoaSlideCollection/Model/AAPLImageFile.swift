@@ -115,9 +115,10 @@ class AAPLImageFile: NSObject {
 
     var dimensionsDescription: String {
         //return "\(self.pixelsWide) x \(self.pixelsHigh) (\(exposureBias))"
-        var desc = "\(self.pixelsWide) x \(self.pixelsHigh)"
+        //var desc = "\(self.pixelsWide) x \(self.pixelsHigh)"
+        var desc = ""
         if !bracketedSiblings.isEmpty {
-            desc += " [\(bracketedSiblings.count + 1)]"
+            desc += "[\(bracketedSiblings.count + 1)]"
         }
         return desc
     }

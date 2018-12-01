@@ -95,7 +95,7 @@ class AAPLImageCollection: NSObject {
         if imageFile.exposureBias == -3 || imageFile.exposureBias == 3 {
             let indexOffset = -1
             let sortedList = imageFiles.sorted { img1, img2 in img1.filenameWithoutExtension! < img2.filenameWithoutExtension! }
-            let baseImage = sortedList[index + indexOffset] as! AAPLImageFile
+            let baseImage = sortedList[index + indexOffset]
             baseImage.bracketedSiblings.append(imageFile.filename)
         } else {
             // Insert the imageFile into our "imageFiles" array (in a KVO-compliant way).
