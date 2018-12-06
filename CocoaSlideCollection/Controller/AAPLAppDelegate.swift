@@ -103,6 +103,8 @@ class AAPLAppDelegate: NSObject, NSApplicationDelegate {
             return counterValue
         }
 
+        validate()
+
         imageFiles.forEach { image in
 
             if !image.bracketedSiblings.isEmpty {
@@ -129,7 +131,42 @@ class AAPLAppDelegate: NSObject, NSApplicationDelegate {
         alert.messageText = "Переименовано"
         alert.informativeText = "Всего: \(imageFiles.count) (если считать брекеты то больше)"
         alert.addButton(withTitle: "Окей")
-        alert.runModal()
+
+        let result = alert.runModal()
+
+        switch result {
+        case NSModalResponseOK:
+            NSApp.terminate(nil)
+        default:
+            print("There is no provision for further buttons")
+        }
+    }
+
+    @discardableResult
+    func validate() -> Bool {
+        let imageFiles = browserWindowControllers.first!.imageCollection!.imageFiles
+        var invalid = false
+        var message = ""
+
+        imageFiles.forEach {
+            if $0.bracketedSiblings.count > 2 {
+                invalid = true
+                message += "Проверь эти фотки - тут либо что то лишнее либо рядом с ними не хватает фоток для другого брекета: "
+                message += "\($0.filename), "
+                message += $0.bracketedSiblings.joined(separator: ", ")
+
+            }
+        }
+
+        if invalid {
+            let alert = NSAlert.init()
+            alert.messageText = "Проблемка.."
+            alert.informativeText = message
+            alert.addButton(withTitle: "Закрыть")
+            alert.runModal()
+            NSApp.terminate(nil)
+        }
+        return invalid
     }
 
     func renameFile(atPath: String, toPath: String) {

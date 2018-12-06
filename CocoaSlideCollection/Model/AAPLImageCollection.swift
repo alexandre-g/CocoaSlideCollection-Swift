@@ -256,6 +256,8 @@ class AAPLImageCollection: NSObject {
                         let imageFile = AAPLImageFile(URL: imageFileURL)
                         self.addImageFile(imageFile)
                     }
+
+                    (NSApp.delegate as! AAPLAppDelegate).validate()
                 }
             }
         }
