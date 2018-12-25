@@ -622,6 +622,22 @@ class AAPLBrowserWindowController: NSWindowController, NSCollectionViewDataSourc
 
                 // We did it!
                 result = true
+
+                /*for row in 0..<collectionView.numberOfItems(inSection: 0) {
+                    let item = collectionView.item(at: row)
+                    let ip = collectionView.indexPath(for: item!)!
+                    let imageFile = self.imageFileAtIndexPath(ip)
+                    print("\(row): \(imageFile?.filename)")
+                }*/
+
+                /*print("printing image collection image files:")
+                imageCollection!.imageFiles.forEach {
+                    print($0.filename)
+                }
+
+                delay(1.5) {
+                    collectionView.reloadData()
+                }*/
             }
 
         } else {

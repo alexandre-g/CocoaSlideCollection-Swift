@@ -95,6 +95,7 @@ class AAPLImageCollection: NSObject {
         if imageFile.exposureBias == -3 || imageFile.exposureBias == 3 {
             let indexOffset = -1
             let sortedList = imageFiles.sorted { img1, img2 in img1.filenameWithoutExtension! < img2.filenameWithoutExtension! }
+            //let sortedList = imageFiles.sorted { img1, img2 in img1.dateLastUpdated! < img2.dateLastUpdated! }
             let baseImage = sortedList[index + indexOffset]
             baseImage.bracketedSiblings.append(imageFile.filename)
         } else {
@@ -128,12 +129,15 @@ class AAPLImageCollection: NSObject {
     }
 
     func moveImageFileFromIndex(_ fromIndex: Int, toIndex: Int) {
+        //print("moveImageFileFromIndex: \(fromIndex) toIndex: \(toIndex)")
         let imageFilesCount = imageFiles.count
         assert(fromIndex < imageFilesCount)
         assert(toIndex < imageFilesCount)  //###
         let imageFile = imageFiles[fromIndex]
         self.removeImageFileAtIndex(fromIndex)
-        self.insertImageFile(imageFile, atIndex: (toIndex <= fromIndex) ? toIndex : (toIndex - 1))
+        //self.insertImageFile(imageFile, atIndex: (toIndex <= fromIndex) ? toIndex : (toIndex - 1))
+        self.insertImageFile(imageFile, atIndex: toIndex)
+        //print("insert image file \(imageFile.filename) at index: \((toIndex <= fromIndex) ? toIndex : (toIndex - 1))")
     }
 
 
