@@ -140,12 +140,12 @@ class AAPLImageFile: NSObject {
         return imageProperties![kCGImagePropertyPixelHeight as AnyHashable] as! Int
     }
 
-    var exposureBias: Int {
+    var exposureBias: Float {
         if imageProperties == nil {
             self.loadMetadata()
         }
         let exif = imageProperties![kCGImagePropertyExifDictionary] as! [AnyHashable: Any]
-        return exif[kCGImagePropertyExifExposureBiasValue as AnyHashable] as! Int
+        return (exif[kCGImagePropertyExifExposureBiasValue as AnyHashable] as! NSNumber).floatValue
     }
 
     //MARK: Loading

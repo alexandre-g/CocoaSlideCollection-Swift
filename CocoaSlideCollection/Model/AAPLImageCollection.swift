@@ -92,7 +92,7 @@ class AAPLImageCollection: NSObject {
         }
 
 
-        if imageFile.exposureBias == -3 || imageFile.exposureBias == 3 {
+        if imageFile.exposureBias == -2 || imageFile.exposureBias == 4 {
             let indexOffset = -1
             let sortedList = imageFiles.sorted { img1, img2 in img1.filenameWithoutExtension! < img2.filenameWithoutExtension! }
             //let sortedList = imageFiles.sorted { img1, img2 in img1.dateLastUpdated! < img2.dateLastUpdated! }
@@ -220,16 +220,16 @@ class AAPLImageCollection: NSObject {
 
                             // Place +3 & -3 exposure bias images into the 0 exposure one
                             filesToProcess.enumerated().forEach { i, image in
-                                if image.exposureBias == -3 {
+                                if image.exposureBias == -2 {
                                     filesToProcess[i - 1].bracketedSiblings.append(image.filename)
 
-                                } else if image.exposureBias == 3 {
+                                } else if image.exposureBias == 4 {
                                     filesToProcess[i - 2].bracketedSiblings.append(image.filename)
                                 }
                             }
 
                             // Filter out +3 & -3 exposure bias images
-                            filesToProcess = filesToProcess.filter { $0.exposureBias != -3 && $0.exposureBias != 3 }
+                            filesToProcess = filesToProcess.filter { $0.exposureBias != -2 && $0.exposureBias != 4 }
 
                         } else {
                             // File was added.
